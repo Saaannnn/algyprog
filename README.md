@@ -21,7 +21,6 @@ La simulación se desarrolla sobre una matriz de hasta 20×20 celdas (extensible
 6. [Formato de Entrada y Salida](#-formato-de-entrada-y-salida)  
 7. [Milagros Especiales](#-milagros-especiales)  
 8. [Recomendaciones de Prueba](#-recomendaciones-de-prueba)  
-9. [Licencia](#-licencia)  
 
 ---
 
@@ -40,9 +39,9 @@ La simulación se desarrolla sobre una matriz de hasta 20×20 celdas (extensible
 
 ## ⚙️ Requerimientos
 
-- Python 3.7 o superior.  
-- Solo librerías estándar de Python (no se requieren paquetes externos).  
-- Terminal o consola para ejecutar el script.
+- Python 3.7 o superior.
+- Solo librerías estándar de Python o las vistas en clases (cualquier otro uso de librerias no vistas en clases y holguin nos mete un 00 de una).  
+- Terminal o consola para ejecutar el script. (como si los sistemas no tuvieran terminal, pero cabe recalcar)
 
 ---
 
