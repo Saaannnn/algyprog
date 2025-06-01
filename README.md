@@ -250,12 +250,12 @@ i2,j2
 
 ## 🛠️ Cómo Contribuir
 
-1. **Fork** este repositorio.  
-2. Crear una **rama nueva** (`git checkout -b feature/nombre-funcionalidad`).  
-3. Realizar cambios y documentar con comentarios claros.  
-4. Hacer **commit** de los cambios (`git commit -m "Descripción breve del cambio"`).  
-5. Hacer **push** a tu rama (`git push origin feature/nombre-funcionalidad`).  
-6. Abrir un **Pull Request** para revisión.
+1. **Fork** este repositorio (Si quieres copiarlo en tu cuenta para no afectar a este) o puedes hacer **Clone** si vas a trabajar directamente en el repositorio (mejor esta pq vamos a trabajar con pocos archivos).
+2. Crear una **rama nueva** por x o y motivo (`git checkout -b <nombre de la nueva rama>`).  
+3. Realizar cambios y documentar con comentarios claros porfa.  
+4. IMPORTANTE!! Hacer **commit** de los cambios (`git commit -m "Descripción breve del cambio"`).  
+5. Hacer **push** a tu rama (`git push origin <la rama en la que trabajaste>`).  
+6. Abrir un **Pull Request** de tu rama hacia main acá en github para revisión.
 
 Por favor, sigue la **guía de estilo**:
 - Nombres de variables descriptivos (p. ej., `filas`, `columnas`, `matriz`).
