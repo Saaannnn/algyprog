@@ -31,7 +31,7 @@ def mostrar_arreglos(M, titulo=""):
     posiciones = []
     for i in range (len(M)):
         for j in range (len(M)):
-            if M[i,j]==1:
+            if M[i][j]==1:
                 posiciones.append((i,j)) #Creación de una lista con todas las posiciones vivas
             
         print(Fore.LIGHTGREEN_EX + str(posiciones) + Style.RESET_ALL)
