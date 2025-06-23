@@ -33,8 +33,6 @@ def mostrar_arreglos(M, titulo=""):
         for j in range (len(M)):
             if M[i][j]==1:
                 posiciones.append((i,j)) #Creación de una lista con todas las posiciones vivas
-            
-        print(posiciones)
     return posiciones
 
 def aplicar_reglas_vida(matriz, i, j):
@@ -77,8 +75,8 @@ def main():
     else:
         M = generar_matrices_user(filas,columnas)
         print("Posiciones con vida en la matriz: ")
-        mostrar_arreglos(M)
+        print(Fore.LIGHTGREEN_EX+str(mostrar_arreglos(M)))
         M2 = siguiente_generacion(M)
         print("Posiciones con vida después de una generación: ")
-        mostrar_arreglos(M2)
+        print(Fore.LIGHTGREEN_EX+str(mostrar_arreglos(M2)))
 main()
