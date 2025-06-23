@@ -55,6 +55,17 @@ def aplicar_reglas_vida(matriz, i, j):
             return 1
         else:
             return 0
+
+def siguiente_generacion(matriz):
+    filas, columnas = np.shape(matriz)
+    nueva_matriz = []
+    for i in range(filas):
+        nueva_fila = []
+        for j in range(columnas):
+            nueva_fila.append(aplicar_reglas_vida(matriz, i, j))
+        nueva_matriz.append(nueva_fila)
+    return nueva_matriz
+    
 # Programa principal
 def main():
     encabezado()
@@ -67,7 +78,7 @@ def main():
         M = generar_matrices_user(filas,columnas)
         print("Posiciones con vida en la matriz: ")
         mostrar_arreglos(M)
-        M2 = aplicar_reglas_de_la_vida(M,filas,columnas)
+        M2 = siguiente_generacion(matriz)
         print("Posiciones con vida después de una generación: ")
         mostrar_arreglos(M2)
 main()
