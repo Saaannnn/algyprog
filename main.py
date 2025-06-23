@@ -37,51 +37,24 @@ def mostrar_arreglos(M, titulo=""):
         print(Fore.LIGHTGREEN_EX + str(posiciones) + Style.RESET_ALL)
     return posiciones
 
-def contar_vecinos(matriz,x,y):
-    # Cuenta cuantas celulas vivas (Representadas con el número uno) hay alrededor de la celda (x,y), (fila,columna). considerando los bordes como celulas vacias.
+def aplicar_reglas_vida(matriz, i, j):
+    filas, cols = np.shape(matriz)
     vecinos = 0
-    filas,columnas = matriz.shape
-    # Desplazamiento en filas y columnas
-    desplazamiento = [-1, 0, 1] 
-    # Recorrer las posiciones vecinas (inclyendo diagonales)
-    for dx in desplazamiento: # Desplazamiento en filas
-        for dy in desplazamiento: # Desplazamiento en columnas
-            if dx == 0 and dy == 0:
-                continue # Saltar la celda central (x,y)
-            else:
-                nx = x + dx # Fila vecina
-                ny = y + dy # Columna vecina
-                # Verificar si la posicion esta dentro de los limites
-                if 0 <= nx < filas and 0 <= ny < columnas:
-                    if matriz[nx][ny] == 1:
-                        vecinos += 1
-    return vecinos 
-
-def reglas_de_la_vida(matriz):
-    matriz=np.array(matriz)
-    filas,columnas = matriz.shape
-    nueva_matriz = np.zeros((filas,columnas), dtype=int)    
-    for i in range(filas):
-        for j in range(columnas):
-            vivos = contar_vecinos(matriz,i,j)
-            if matriz[i,j] == 1:
-                # Regla 1: muerte por soledad
-                if vivos <= 1:
-                    nueva_matriz[i,j]=0
-                # Regla 2: muerte por sobrepoblación
-                elif vivos >= 4:
-                    nueva_matriz[i,j]=0
-                # Regla 3: supervivencia de la célula
-                elif 2 <= vivos <= 3:
-                    nueva_matriz[i,j]=1
-            else:
-                # Regla 4: Nacimiento
-                if vivos == 3:
-                    nueva_matriz[i,j]=1
-                else:
-                    nueva_matriz[i,j]=0
-    return nueva_matriz.tolist()
-
+    for x in range(i - 1, i + 2):
+        for y in range(j - 1, j + 2):
+            if (x == i and y == j) or (x < 0) or (y < 0) or (x >= filas) or (y >= cols):
+                continue
+            vecinos += matriz[x][y]
+    if matriz[i][j] == 1:
+        if (vecinos <= 1) or (vecinos >= 4):
+            return 0
+        else:
+            return 1
+    else:
+        if (vecinos == 3) or (vecinos == 2):
+            return 1
+        else:
+            return 0
 # Programa principal
 def main():
     encabezado()
