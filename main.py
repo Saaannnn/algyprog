@@ -78,7 +78,7 @@ def main():
         M = generar_matrices_user(filas,columnas)
         print("Posiciones con vida en la matriz: ")
         mostrar_arreglos(M)
-        M2 = siguiente_generacion(matriz)
+        M2 = siguiente_generacion(M)
         print("Posiciones con vida después de una generación: ")
         mostrar_arreglos(M2)
 main()
