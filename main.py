@@ -34,7 +34,7 @@ def mostrar_arreglos(M, titulo=""):
             if M[i][j]==1:
                 posiciones.append((i,j)) #Creación de una lista con todas las posiciones vivas
             
-        print(Fore.LIGHTGREEN_EX + str(posiciones) + Style.RESET_ALL)
+        print(posiciones)
     return posiciones
 
 def aplicar_reglas_vida(matriz, i, j):
