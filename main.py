@@ -5,7 +5,7 @@ from colorama import *
 from numpy import *
 from random import *
 
-init()
+init(autoreset=True)
 # Función para mostrar el encabezado
 def encabezado():
     print(Fore.BLUE+"UCAB Elaborado por: ",end="")
@@ -13,140 +13,88 @@ def encabezado():
     print("  Proyecto Avance 1  ")
     print()
 
-# Función para mostrar los arreglos con colores
-def mostrar_arreglos(f1, f2, f3, titulo=""):
+def generar_matrices_user(filas,columnas): #Generación de todas las células vivas al azar
+    matriz = []
+    for i in range(0,filas,1):
+        fila = []
+        for i in range(0,columnas,1):
+            valor = np.random.randint(0,2)
+            fila.append(valor)
+        matriz.append(fila)
+    return matriz
+
+# Función para mostrar las posiciones  con colores
+def mostrar_arreglos(M, titulo=""):
     if titulo:
         print(f"\n{titulo}")
+    # Mostrar la matriz
+    posiciones = []
+    for i in range (len(M)):
+        for j in range (len(M)):
+            if M[i][j]==1:
+                posiciones.append((i,j)) #Creación de una lista con todas las posiciones vivas
+            
+        print(Fore.LIGHTGREEN_EX + str(posiciones) + Style.RESET_ALL)
+    return posiciones
 
-    print("       0   1   2   3") # Índices de columna para referencia
-
-    # Mostrar F1
-    print("F1[I]", end="  ")
-    for celda in f1:
-        color = Fore.BLUE if celda == 1 else Fore.RED
-        print(f"{color}{celda}   ", end="")
-    print()
-
-    # Mostrar F2
-    print("F2[I]", end="  ")
-    for celda in f2:
-        color = Fore.BLUE if celda == 1 else Fore.RED
-        print(f"{color}{celda}   ", end="")
-    print()
-
-    # Mostrar F3
-    print("F3[I]", end="  ")
-    for celda in f3:
-        color = Fore.BLUE if celda == 1 else Fore.RED
-        print(f"{color}{celda}   ", end="")
-    print()
-    print()
-
-# Función del Avance 2: Reglas de la Vida
-def aplicar_reglas_vida(matriz, i, j):
-    filas, cols = matriz.shape
+def contar_vecinos(matriz,x,y):
+    # Cuenta cuantas celulas vivas (Representadas con el número uno) hay alrededor de la celda (x,y), (fila,columna). considerando los bordes como celulas vacias.
     vecinos = 0
-    for x in range(i - 1, i + 2):
-        for y in range(j - 1, j + 2):
-            if (x == i and y == j) or x < 0 or y < 0 or x >= filas or y >= cols:
-                continue
-            vecinos += matriz[x, y]
-    if matriz[i, j] == 1:
-        if vecinos <= 1 or vecinos >= 4:
-            return 0
-        else:
-            return 1
-    else:
-        if vecinos == 3:
-            return 1
-        else:
-            return 0
+    filas,columnas = matriz.shape
+    # Desplazamiento en filas y columnas
+    desplazamiento = [-1, 0, 1] 
+    # Recorrer las posiciones vecinas (inclyendo diagonales)
+    for dx in desplazamiento: # Desplazamiento en filas
+        for dy in desplazamiento: # Desplazamiento en columnas
+            if dx == 0 and dy == 0:
+                continue # Saltar la celda central (x,y)
+            else:
+                nx = x + dx # Fila vecina
+                ny = y + dy # Columna vecina
+                # Verificar si la posicion esta dentro de los limites
+                if 0 <= nx < filas and 0 <= ny < columnas:
+                    if matriz[nx][ny] == 1:
+                        vecinos += 1
+    return vecinos 
 
-def construir_cadena_c1(F1M, F2M, F3M):
-    valores = lambda arr: ",".join(str(x) for x in arr)
-    return f"F1M,{valores(F1M)},F2M,{valores(F2M)},F3M,{valores(F3M)}"
+def reglas_de_la_vida(matriz):
+    matriz=np.array(matriz)
+    filas,columnas = matriz.shape
+    nueva_matriz = np.zeros((filas,columnas), dtype=int)    
+    for i in range(filas):
+        for j in range(columnas):
+            vivos = contar_vecinos(matriz,i,j)
+            if matriz[i,j] == 1:
+                # Regla 1: muerte por soledad
+                if vivos <= 1:
+                    nueva_matriz[i,j]=0
+                # Regla 2: muerte por sobrepoblación
+                elif vivos >= 4:
+                    nueva_matriz[i,j]=0
+                # Regla 3: supervivencia de la célula
+                elif 2 <= vivos <= 3:
+                    nueva_matriz[i,j]=1
+            else:
+                # Regla 4: Nacimiento
+                if vivos == 3:
+                    nueva_matriz[i,j]=1
+                else:
+                    nueva_matriz[i,j]=0
+    return nueva_matriz.tolist()
 
 # Programa principal
-if __name__ == "__main__":
+def main():
     encabezado()
-
-    # AVANCE 1
-    # Declarar e inicializar los Arreglos utilizando únicamente Arreglos NUMPY
-    # Los arreglos tienen 4 posiciones, como se infiere de las imágenes (0, 1, 2, 3)
-    F1 = np.zeros(4, dtype=int)
-    F2 = np.zeros(4, dtype=int)
-    F3 = np.zeros(4, dtype=int)
-    # Almacenar la información de forma Aleatoria, a excepción de F2[1] que debe ser 0 fijo
-    for i in range(4):
-        F1[i] = np.random.randint(0, 2) # Genera 0 o 1
-        F2[i] = np.random.randint(0, 2)
-        F3[i] = np.random.randint(0, 2)
-    F2[1] = 0 # Requisito fijo para la posición F2[1]
-
-# Mostrar la información del "Caldo Cultivo" inicial
-    mostrar_arreglos(F1, F2, F3, titulo="Caldo Cultivo")
-
-   # Aplicar las Reglas de la Vida SOLO sobre F2[1]
-    # Crear nuevos arreglos para almacenar el estado modificado (F1M, F2M, F3M)
-    F1M = np.copy(F1) # Copia F1 sin cambios para F1M
-    F2M = np.copy(F2) # Copia F2 para modificar F2M[1]
-    F3M = np.copy(F3) # Copia F3 sin cambios para F3M
-
-    contador_vecinos_vivos = 0
-    if F2[0] == 1: contador_vecinos_vivos += 1
-    if F2[2] == 1: contador_vecinos_vivos += 1
-    if F1[0] == 1: contador_vecinos_vivos += 1
-    if F1[1] == 1: contador_vecinos_vivos += 1
-    if F1[2] == 1: contador_vecinos_vivos += 1
-    if F3[0] == 1: contador_vecinos_vivos += 1
-    if F3[1] == 1: contador_vecinos_vivos += 1
-    if F3[2] == 1: contador_vecinos_vivos += 1
-
-# Estado actual de F2[1] antes de aplicar las reglas
-    estado_actual_f2_1 = F2[1]
-    nuevo_estado_f2_1 = estado_actual_f2_1# Por defecto, la celda mantiene su estado
-# Aplicar las reglas del Juego de la Vida a F2[1]
-    if estado_actual_f2_1 == 1: # Si la celda está viva (1)
-        if contador_vecinos_vivos <= 1 or contador_vecinos_vivos >= 4: # REGLA 1: Solitud
-            nuevo_estado_f2_1 = 0
-        elif 2 <= contador_vecinos_vivos <= 3:
-            nuevo_estado_f2_1 = 1
-    else: # Si la celda está vacía (0)
-        if contador_vecinos_vivos == 3:
-            nuevo_estado_f2_1 = 1
-    
-    # Actualizar la posición F2M[1] con el nuevo estado
-    F2M[1] = nuevo_estado_f2_1
-
-# Mostrar la información de los arreglos F1M, F2M y F3M (después de la evolución)
-    mostrar_arreglos(F1M, F2M, F3M, titulo="Evolución al cabo de una generación de la celda F2[1]")
-
-    # Mensaje sobre la evolución de la celda F2[1]
-    if nuevo_estado_f2_1 == 1 and estado_actual_f2_1 == 0:
-        print("Mensaje: Nace una Célula en F2[1]")
-    elif nuevo_estado_f2_1 == 0 and estado_actual_f2_1 == 1:
-        print("Mensaje: La celda F2[1] muere")
-    else: # El estado no cambió o sigue vacía/viva
-        print("Mensaje: La celda F2[1] permanece Vacía" if nuevo_estado_f2_1 == 0 else "Mensaje: La celda F2[1] permanece Viva")
-        
-    # AVANCE 2
-    input("\n\nPresione ENTER para mostrar la Primera Generación completa (Avance 2)...\n")
-    F1 = np.random.randint(0, 2, 4)
-    F2 = np.random.randint(0, 2, 4)
-    F3 = np.random.randint(0, 2, 4)
-
-    mostrar_arreglos(F1, F2, F3, titulo="Nuevo Caldo Cultivo para Avance 2")
-
-    M = np.array([F1, F2, F3])
-    M1 = np.zeros((3, 4), dtype=int)
-
-    for i in range(3):
-        for j in range(4):
-            M1[i, j] = aplicar_reglas_vida(M, i, j)
-
-    F1M, F2M, F3M = M1[0], M1[1], M1[2]
-    mostrar_arreglos(F1M, F2M, F3M, titulo="Primera Generación")
-
-    c1 = construir_cadena_c1(F1M, F2M, F3M)
-    print("Cadena c1:")
-    print(c1)
+    # Nuevos avances, empleo de una matriz cuyas dimensiones son decididas por un input
+    filas = int(input("Introduce la cantidad de filas de una matriz: "))
+    columnas = int(input("Introduce la cantidad de filas de una matriz: "))
+    if (filas > 20) or (columnas > 20):
+        print(Fore.RED+"¡ERROR! ¡DIMENSIONES MUY GRANDES!")
+    else:
+        M = generar_matrices_user(filas,columnas)
+        print("Posiciones con vida en la matriz: ")
+        mostrar_arreglos(M)
+        M2 = reglas_de_la_vida(M)
+        print("Posiciones con vida después de una generación: ")
+        mostrar_arreglos(M2)
+main()
