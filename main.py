@@ -15,9 +15,9 @@ def encabezado():
 
 def generar_matrices_user(filas,columnas): #Generación de todas las células vivas al azar
     matriz = []
-    for i in range(0,filas,1):
+    for i in range(0,filas):
         fila = []
-        for i in range(0,columnas,1):
+        for i in range(0,columnas):
             valor = np.random.randint(0,2)
             fila.append(valor)
         matriz.append(fila)
@@ -31,7 +31,7 @@ def mostrar_arreglos(M, titulo=""):
     posiciones = []
     for i in range (len(M)):
         for j in range (len(M)):
-            if M[i][j]==1:
+            if M[i,j]==1:
                 posiciones.append((i,j)) #Creación de una lista con todas las posiciones vivas
             
         print(Fore.LIGHTGREEN_EX + str(posiciones) + Style.RESET_ALL)
@@ -67,7 +67,7 @@ def main():
         M = generar_matrices_user(filas,columnas)
         print("Posiciones con vida en la matriz: ")
         mostrar_arreglos(M)
-        M2 = reglas_de_la_vida(M)
+        M2 = aplicar_reglas_de_la_vida(M,filas,columnas)
         print("Posiciones con vida después de una generación: ")
         mostrar_arreglos(M2)
 main()
