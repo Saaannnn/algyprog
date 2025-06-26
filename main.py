@@ -6,14 +6,23 @@ from numpy import *
 from random import *
 
 init(autoreset=True)
-# Función para mostrar el encabezado
 def encabezado():
     print(Fore.BLUE+"UCAB Elaborado por: ",end="")
     print(Fore.MAGENTA+"Jesus Blanca, Diego García, Alessandro Perez y Eleam Villalta") 
     print("  Proyecto Avance 1  ")
     print()
 
-def generar_matrices_user(filas,columnas): #Generación de todas las células vivas al azar
+def simular_generaciones(matriz, gen_total):
+    for gen in range(gen_total):
+        if not any(1 in fila for fila in matriz):
+            print(Fore.LIGHTRED_EX + "Todas las células murieron en la generación {gen}.")
+            break
+        print(Fore.LIGHTMAGENTA_EX + "Generación:", (gen+1))
+        matriz = siguiente_generacion(matriz)
+        mostrar_arreglo(matriz)
+    return matriz
+
+def generar_matrices_user(filas,columnas):
     matriz = []
     for i in range(0,filas):
         fila = []
@@ -23,7 +32,6 @@ def generar_matrices_user(filas,columnas): #Generación de todas las células vi
         matriz.append(fila)
     return matriz
 
-# Función para mostrar las posiciones  con colores
 def mostrar_arreglo(Matriz):
     for i in range(len(Matriz)):
         fila = ""
@@ -34,8 +42,6 @@ def mostrar_arreglo(Matriz):
                 fila += Fore.LIGHTRED_EX + "0 "
             elif Matriz[i][j] == 2:
                 fila += Fore.LIGHTYELLOW_EX + "A "
-            else:
-                fila += str(Matriz[i][j]) + " "  # Por si hay otro valor diferente
         print(fila)
     print()
 
@@ -107,11 +113,9 @@ def recorrido_zigzag(matriz):
     recorrido = []
     for j in range(len(matriz)):
         if j % 2 == 0:
-            # Recorre de arriba a abajo
             for i in range(len(matriz[0])):
                 recorrido.append((i, j))
         else:
-            # Recorre de abajo a arriba
             for i in range(len(matriz[0])):
                 recorrido.append((i, j))
     return recorrido
@@ -130,16 +134,15 @@ def milagro_1(matriz):
             libres.append((i, j))
 
     if len(libres) >= int(0.5 * len(impares)) and libres:
-        i, j = libres[0]  # Primera posición desocupada válida
-        matriz[i][j] = 2  # Célula ángel
-        print(Fore.LIGHTMAGENTA_EX+"¡Milagro 1! Nació célula ángel en la posición ({i}, {j})")
+        i, j = libres[0]
+        matriz[i][j] = 2
+        print(Fore.LIGHTMAGENTA_EX+"¡Milagro! Nació célula ángel en la posición", (i,j))
+        mostrar_arreglo(matriz)
     else:
-        print(Fore.LIGHTRED_EX + "Milagro 1 no ocurrió.")
-
-    return matriz
+        print(Fore.LIGHTRED_EX+"No ocurrió ningún milagro.")
 
 def milagro2(matriz):
-    recorrido = recorrido_diagonal(matriz)  # Nombre corregido
+    recorrido = recorrido_diagonal(matriz)
     nueva_matriz = matriz.copy()
     candidatos = []
     total_x_par = 0
@@ -151,13 +154,12 @@ def milagro2(matriz):
                 candidatos.append((i, j))
 
     if len(candidatos) >= int(0.7 * total_x_par):
-        i, j = candidatos[-1]  # última posición desocupada válida
+        i, j = candidatos[-1]
         nueva_matriz[i][j] = 2
-        print(Fore.LIGHTMAGENTA_EX+"¡Milagro 2! Nació célula ángel en {i, j}")
+        print(Fore.LIGHTMAGENTA_EX+"¡Milagro! Nació célula ángel en", (i,j))
+        mostrar_arreglo(nueva_matriz)
     else:
-        print(Fore.LIGHTRED_EX+"Milagro 2 no ocurrió.")
-
-    return nueva_matriz
+        print(Fore.LIGHTRED_EX+"No ocurrió ningún milagro.")
 
 def milagro3(matriz):
     nueva_matriz = matriz.copy()
@@ -173,28 +175,25 @@ def milagro3(matriz):
         segunda_mitad = recorrido[len(recorrido)//2:]
         for i, j in segunda_mitad:
             if (i, j) in candidatos:
-                nueva_matriz[i][j] = 2  # célula ángel
-                print(Fore.LIGHTBLACK_EX+"¡El milagro ocurrió! Nació célula ángel en", (i,j))
+                nueva_matriz[i][j] = 2
+                print(Fore.LIGHTMAGENTA_EX+"¡Milagro! Nació célula ángel en", (i,j))
+                mostrar_arreglo(nueva_matriz)
                 break
     else:
-        print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió.")
-    return nueva_matriz
+        print(Fore.LIGHTRED_EX+"No ocurrió ningún milagro.")
 
-# Programa principal
 def main():
     encabezado()
-    # Nuevos avances, empleo de una matriz cuyas dimensiones son decididas por un input
     filas = int(input(Fore.LIGHTBLACK_EX+"Introduce la cantidad de filas de una matriz: "))
-    columnas = int(input(Fore.LIGHTBLACK_EX+"Introduce la cantidad de filas de una matriz: "))
+    columnas = int(input(Fore.LIGHTBLACK_EX+"Introduce la cantidad de columnas de una matriz: "))
     if (filas > 20) or (columnas > 20):
         print(Fore.RED+"¡ERROR! ¡DIMENSIONES MUY GRANDES!")
     else:
         M = generar_matrices_user(filas,columnas)
         print(Fore.LIGHTBLACK_EX+"La matriz:")
         mostrar_arreglo(M)
-        M2 = siguiente_generacion(M)
-        print(Fore.LIGHTBLACK_EX+"Actualización:")
-        mostrar_arreglo(M2)
+        generaciones = int(input(Fore.LIGHTBLACK_EX+"¿Cuántas generaciones quiere que se simulen?: "))
+        M2 = simular_generaciones(M,generaciones)
         print(Fore.LIGHTBLACK_EX+"¿Quieres aplicar un milagro?")
         print(Fore.MAGENTA+"      1. Si")
         print(Fore.MAGENTA+"      2. No")
@@ -206,19 +205,15 @@ def main():
             print(Fore.MAGENTA+"      Milagro 3")
             Opt=int(input())
             if Opt==1:
-                M3 = milagro_1(M2)
-                mostrar_arreglo(M3)
+                milagro_1(M2)
             elif Opt==2:
-                M3 = milagro2(M2)
-                mostrar_arreglo(M3)
+                milagro2(M2)
             elif Opt==3:
-                M3 = milagro3(M2)
-                mostrar_arreglo(M3)
+                milagro3(M2)
             else:
                 print(Fore.LIGHTRED_EX+"ERROR. OPCIÓN INVÁLIDA.")
         elif Sel==2:
             print(Fore.CYAN+"Fin del programa")
         else:
             print(Fore.LIGHTRED_EX+"ERROR. OPCIÓN INVÁLIDA.")
-
 main()
