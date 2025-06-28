@@ -91,10 +91,10 @@ def leer_configuracion_inicial(nombre_archivo):
         return tablero, filas, columnas
 
     except FileNotFoundError:
-        print(f"Error: El archivo '{nombre_archivo}' no se encontró")
+        print(Fore.LIGHTRED_EX+f"Error: El archivo '{nombre_archivo}' no se encontró")
         return None, None, None
     except Exception as e:
-        print(f"Ocurrió un error al leer el archivo: {e}")
+        print(Fore.LIGHTRED_EX+f"Ocurrió un error al leer el archivo: {e}")
         return None, None, None
 
 def configuracion_inicial_manual():
@@ -249,7 +249,7 @@ def modificar_tablero(tablero, filas, columnas):
         if accion == 'a':
             if tablero[f, c] == CELULA_VACIA_VAL:
                 tablero[f, c] = CELULA_VIVA_VAL
-                print(f"Célula agregada en ({f},{c})")
+                print(Fore.LIGHTGREEN_EX+f"Célula agregada en ({f},{c})")
             else:
                 print(f"La celda ({f},{c}) ya está ocupada")
         elif accion == 'e':
@@ -355,7 +355,7 @@ def aplicar_milagro(tablero, filas, columnas):
                         break
                 if posicion_nacimiento:
                     tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
-                    print(f"¡Milagro 1 ocurrido! Una célula ángel nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
+                    print(Fore.LIGHTGREEN_EX+f"¡Milagro 1 ocurrido! Una célula ángel nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
                 else:
                     print("Milagro 1 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
             else:
@@ -386,7 +386,7 @@ def aplicar_milagro(tablero, filas, columnas):
                         break
                 if posicion_nacimiento:
                     tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
-                    print(f"¡Milagro 2 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
+                    print(Fore.LIGHTGREEN_EX+f"¡Milagro 2 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
                 else:
                     print("Milagro 2 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
             else:
@@ -421,7 +421,7 @@ def aplicar_milagro(tablero, filas, columnas):
                         break
                 if se_encontro_posicion_nacimiento:
                     tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
-                    print(f"¡Milagro 3 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
+                    print(Fore.LIGHTGREEN_EX+f"¡Milagro 3 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
                 else:
                     print("Milagro 3 no ocurrió: No se encontró una posición vacía elegible en la segunda mitad del recorrido")
             else:
@@ -462,7 +462,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
     celulas_vivas_iniciales = np.sum(tablero_actual == CELULA_VIVA_VAL) # Contar con numpy
 
     if celulas_vivas_iniciales == 0:
-        print("\nEl tablero inicial no tiene células vivas. No hay evolución posible")
+        print(Fore.LIGHTRED_EX+"\nEl tablero inicial no tiene células vivas. No hay evolución posible")
         mostrar_tablero(tablero_actual, 0)
         input("Presione Enter para continuar...")
         return tablero_actual
@@ -509,7 +509,7 @@ def guardar_configuracion_final(tablero, nombre_archivo):
                 for r, c in zip(filas_vivas, cols_vivas):
                     f.write(f"{r},{c}\n")
                 celulas_vivas_encontradas = True
-                print(f"Configuración final guardada exitosamente en '{nombre_archivo}'")
+                print(Fore.LIGHTGREEN_EX+f"Configuración final guardada exitosamente en '{nombre_archivo}'")
     except Exception as e:
         print(Fore.LIGHTRED_EX+f"Error al guardar la configuración final en '{nombre_archivo}': {e}")
     input("Presione Enter para continuar...")
@@ -563,7 +563,7 @@ def menu_principal():
             if tablero_actual is not None:
                 mostrar_tablero(tablero_actual, "Actual")
             else:
-                print("No hay un tablero configurado. Por favor, cargue o genere uno primero")
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado. Por favor, cargue o genere uno primero")
             input("Presione Enter para continuar...")
         
         elif eleccion == '5':
