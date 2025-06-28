@@ -85,7 +85,7 @@ def leer_configuracion_inicial(nombre_archivo):
             if i is not None and j is not None:
                 tablero[i, j] = CELULA_VIVA_VAL # Acceso a elementos de numpy
             else:
-                print(f"Advertencia: Ignorando línea {num_linea} por formato o coordenadas inválidas: '{linea.strip()}'")
+                print(Fore.LIGHTYELLOW_EX+f"Advertencia: Ignorando línea {num_linea} por formato o coordenadas inválidas: '{linea.strip()}'")
 
         print(Fore.LIGHTGREEN_EX+f"Configuración inicial cargada desde '{nombre_archivo}'. Dimensiones: {filas}x{columnas}")
         return tablero, filas, columnas
@@ -343,9 +343,9 @@ def aplicar_milagro(tablero, filas, columnas):
             if tablero[f, c] == CELULA_VACIA_VAL:
                 celdas_vacias_en_ruta.append((f, c))
         
-        print(f"Milagro 1: Celdas relevantes con coordenadas (fila,col) impares: {celdas_relevantes_conteo}")
-        print(f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
-        print(f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
+        print(Fore.LIGHTYELLOW_EX+f"Milagro 1: Celdas relevantes con coordenadas (fila,col) impares: {celdas_relevantes_conteo}")
+        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
+        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
 
         if len(celdas_vacias_en_ruta) >= requeridas_vacias:
             if celdas_vacias_en_ruta:
@@ -374,9 +374,9 @@ def aplicar_milagro(tablero, filas, columnas):
             if tablero[f, c] == CELULA_VACIA_VAL:
                 celdas_vacias_en_ruta.append((f, c))
         
-        print(f"Milagro 2: Celdas relevantes con coordenada columna par: {celdas_relevantes_conteo}")
-        print(f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
-        print(f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
+        print(Fore.LIGHTYELLOW_EX+f"Milagro 2: Celdas relevantes con coordenada columna par: {celdas_relevantes_conteo}")
+        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
+        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
 
         if len(celdas_vacias_en_ruta) >= requeridas_vacias:
             if celdas_vacias_en_ruta:
@@ -405,9 +405,9 @@ def aplicar_milagro(tablero, filas, columnas):
             if tablero[f, c] == CELULA_VACIA_VAL:
                 celdas_vacias_en_ruta.append((f, c))
         
-        print(f"Milagro 3: Celdas relevantes con coordenada fila impar: {celdas_relevantes_conteo}")
-        print(f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
-        print(f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
+        print(Fore.LIGHTYELLOW_EXf+"Milagro 3: Celdas relevantes con coordenada fila impar: {celdas_relevantes_conteo}")
+        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
+        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
 
         if len(celdas_vacias_en_ruta) >= requeridas_vacias:
             if celdas_vacias_en_ruta:
@@ -430,7 +430,7 @@ def aplicar_milagro(tablero, filas, columnas):
             print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió: No se cumple la condición de celdas vacías requeridas")
 
     elif eleccion == '4':
-        print("Volviendo al menú principal")
+        print(Fore.LIGHTYELLOW_EX+"Volviendo al menú principal")
     else:
         print(Fore.LIGHTRED_EX+"Opción inválida de milagro")
 
@@ -470,7 +470,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
     for gen in range(1, generaciones + 1):
         limpiar_pantalla()
         mostrar_tablero(tablero_actual, gen - 1)
-        print(f"Simulando generación {gen} de {generaciones}...")
+        print(Fore.LIGHTYELLOW_EX+f"Simulando generación {gen} de {generaciones}...")
 
         siguiente_tablero = aplicar_reglas(tablero_actual, filas, columnas)
         celulas_vivas_en_siguiente_gen = np.sum(siguiente_tablero == CELULA_VIVA_VAL)
