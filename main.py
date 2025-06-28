@@ -28,10 +28,10 @@ def validar_dimensiones(dim_str):
         if MIN_DIMENSION <= n <= MAX_DIMENSION and MIN_DIMENSION <= m <= MAX_DIMENSION:
             return n, m
         else:
-            print(f"Dimensiones inválidas. Deben estar entre {MIN_DIMENSION} y {MAX_DIMENSION}")
+            print(Fore.LIGHTRED_EX+f"Dimensiones inválidas. Deben estar entre {MIN_DIMENSION} y {MAX_DIMENSION}")
             return None, None
     except ValueError:
-        print("Formato de dimensiones incorrecto. Use 'n,m' (ej. 10,10)")
+        print(Fore.LIGHTRED_EX+"Formato de dimensiones incorrecto. Use 'n,m' (ej. 10,10)")
         return None, None
 
 def validar_coordenadas(coord_str, filas, columnas):
@@ -69,7 +69,7 @@ def leer_configuracion_inicial(nombre_archivo):
             lineas = f.readlines()
 
         if not lineas:
-            print("El archivo está vacío.")
+            print(Fore.LIGHTRED_EX+"El archivo está vacío.")
             return None, None, None
 
         # Leer dimensiones
@@ -148,9 +148,9 @@ def configuracion_inicial_aleatoria():
             if filas <= num_celulas_vivas <= total_celdas:
                 break
             else:
-                print(f"El número de células vivas debe estar entre {filas} y {total_celdas}.")
+                print(Fore.LIGHTRED_EX+f"El número de células vivas debe estar entre {filas} y {total_celdas}.")
         except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número o 'r'")
+            print(Fore.LIGHTRED_EX+"Entrada inválida. Por favor, ingrese un número o 'r'")
 
     # Colocar celdas vivas aleatoriamente
     indices_planos = np.arange(total_celdas) # Array de 0 a total_celdas-1
@@ -170,7 +170,7 @@ def mostrar_tablero(tablero, generacion="Actual"):
     Muestra el estado actual del tablero (numpy array)
     """
     if tablero is None:
-        print("No hay tablero para mostrar")
+        print(Fore.LIGHTRED_EX+"No hay tablero para mostrar")
         return
 
     print(f"\n--- Generación {generacion} ---")
@@ -238,7 +238,7 @@ def modificar_tablero(tablero, filas, columnas):
             break
 
         if accion not in ['a', 'e']:
-            print("Opción inválida. Por favor, elija 'a', 'e' o 't'")
+            print(Fore.LIGHTRED_EX+"Opción inválida. Por favor, elija 'a', 'e' o 't'")
             continue
 
         coord_input = input(f"Ingrese las coordenadas (i,j) para la acción (tablero {filas}x{columnas}): ")
@@ -432,7 +432,7 @@ def aplicar_milagro(tablero, filas, columnas):
     elif eleccion == '4':
         print("Volviendo al menú principal")
     else:
-        print("Opción inválida de milagro")
+        print(Fore.LIGHTRED_EX+"Opción inválida de milagro")
 
     input("\nPresione Enter para continuar...")
     return tablero
@@ -443,7 +443,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
     o hasta que no queden celdas vivas.
     """
     if tablero is None:
-        print("No hay un tablero inicial configurado para la simulación")
+        print(Fore.LIGHTRED_EX+"No hay un tablero inicial configurado para la simulación")
         input("Presione Enter para continuar...")
         return None
 
@@ -452,11 +452,11 @@ def ejecutar_simulacion(tablero, filas, columnas):
             generaciones_str = input("Ingrese el número de generaciones a simular (0 para solo una generación): ")
             generaciones = int(generaciones_str)
             if generaciones < 0:
-                print("El número de generaciones no puede ser negativo")
+                print(Fore.LIGHTRED_EX+"El número de generaciones no puede ser negativo")
             else:
                 break
         except ValueError:
-            print("Entrada inválida. Ingrese un número entero")
+            print(Fore.LIGHTRED_EX+"Entrada inválida. Ingrese un número entero")
 
     tablero_actual = tablero.copy() # Copia del array numpy
     celulas_vivas_iniciales = np.sum(tablero_actual == CELULA_VIVA_VAL) # Contar con numpy
@@ -494,7 +494,7 @@ def guardar_configuracion_final(tablero, nombre_archivo):
     Guarda la configuración final de las celdas vivas en un archivo de texto especificado.
     """
     if tablero is None:
-        print("No hay un tablero para guardar")
+        print(Fore.LIGHTRED_EX+"No hay un tablero para guardar")
         return
 
     try:
@@ -511,7 +511,7 @@ def guardar_configuracion_final(tablero, nombre_archivo):
                 celulas_vivas_encontradas = True
                 print(f"Configuración final guardada exitosamente en '{nombre_archivo}'")
     except Exception as e:
-        print(f"Error al guardar la configuración final en '{nombre_archivo}': {e}")
+        print(Fore.LIGHTRED_EX+f"Error al guardar la configuración final en '{nombre_archivo}': {e}")
     input("Presione Enter para continuar...")
 
 # Flujo Principal del Programa
@@ -544,7 +544,7 @@ def menu_principal():
             if tablero_actual is not None:
                 mostrar_tablero(tablero_actual, "Inicial")
             else:
-                print("No se pudo cargar la configuración")
+                print(Fore.LIGHTRED_EX+"No se pudo cargar la configuración")
             input("Presione Enter para continuar...")
 
         elif eleccion == '2':
@@ -570,7 +570,7 @@ def menu_principal():
             if tablero_actual is not None and filas is not None and columnas is not None:
                 tablero_actual = modificar_tablero(tablero_actual, filas, columnas)
             else:
-                print("No hay un tablero configurado para modificar")
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para modificar")
             input("Presione Enter para continuar...")
 
         elif eleccion == '6':
@@ -583,7 +583,7 @@ def menu_principal():
                     tablero_actual = aplicar_reglas(tablero_actual, filas, columnas)
                     mostrar_tablero(tablero_actual, "Siguiente")
             else:
-                print("No hay un tablero configurado para calcular la siguiente generación")
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para calcular la siguiente generación")
             input("Presione Enter para continuar...")
 
         elif eleccion == '7':
@@ -591,14 +591,14 @@ def menu_principal():
                 tablero_actual = aplicar_milagro(tablero_actual, filas, columnas)
                 mostrar_tablero(tablero_actual, "Después del Milagro")
             else:
-                print("No hay un tablero configurado para aplicar milagros")
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para aplicar milagros")
             input("Presione Enter para continuar...")
 
         elif eleccion == '8':
             if tablero_actual is not None and filas is not None and columnas is not None:
                 tablero_actual = ejecutar_simulacion(tablero_actual, filas, columnas)
             else:
-                print("No hay un tablero configurado para simular")
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para simular")
 
         elif eleccion == '9':
             guardar_configuracion_final(tablero_actual, ARCHIVO_SALIDA_ACA)
@@ -608,7 +608,7 @@ def menu_principal():
             break
 
         else:
-            print("Opción inválida. Por favor, intente de nuevo")
+            print(Fore.LIGHTRED_EX+"Opción inválida. Por favor, intente de nuevo")
             input("Presione Enter para continuar...")
 
 if __name__ == "__main__":
