@@ -43,10 +43,10 @@ def validar_coordenadas(coord_str, filas, columnas):
         if 0 <= i < filas and 0 <= j < columnas:
             return i, j
         else:
-            print(f"Coordenadas fuera de rango. Filas: 0-{filas-1}, Columnas: 0-{columnas-1}.")
+            print(Fore.LIGHTRED_EX+f"Coordenadas fuera de rango. Filas: 0-{filas-1}, Columnas: 0-{columnas-1}.")
             return None, None
     except ValueError:
-        print("Formato de coordenadas incorrecto. Use 'i,j' (ej. 0,0)")
+        print(Fore.LIGHTRED_EX+"Formato de coordenadas incorrecto. Use 'i,j' (ej. 0,0)")
         return None, None
 
 def inicializar_tablero_vacio_np(filas, columnas):
@@ -87,7 +87,7 @@ def leer_configuracion_inicial(nombre_archivo):
             else:
                 print(f"Advertencia: Ignorando línea {num_linea} por formato o coordenadas inválidas: '{linea.strip()}'")
 
-        print(f"Configuración inicial cargada desde '{nombre_archivo}'. Dimensiones: {filas}x{columnas}")
+        print(Fore.LIGHTGREEN_EX+f"Configuración inicial cargada desde '{nombre_archivo}'. Dimensiones: {filas}x{columnas}")
         return tablero, filas, columnas
 
     except FileNotFoundError:
@@ -109,7 +109,7 @@ def configuracion_inicial_manual():
 
     tablero = inicializar_tablero_vacio_np(filas, columnas)
 
-    print("Ingrese las coordenadas de las células vivas (i,j). Deje en blanco para terminar")
+    print(Fore.LIGHTBLUE_EX+"Ingrese las coordenadas de las células vivas (i,j). Deje en blanco para terminar")
     while True:
         coord_input = input(Fore.LIGHTBLUE_EX+f"Célula viva (i,j) para un tablero de {filas}x{columnas}: ")
         if not coord_input:
@@ -117,9 +117,9 @@ def configuracion_inicial_manual():
         i, j = validar_coordenadas(coord_input, filas, columnas)
         if i is not None and j is not None:
             tablero[i, j] = CELULA_VIVA_VAL # Acceso a elementos de numpy
-            print(f"Célula agregada en ({i},{j}).")
+            print(Fore.LIGHTGREEN_EX+f"Célula agregada en ({i},{j}).")
 
-    print("Configuración manual completa.")
+    print(Fore.LIGHTGREEN_EX+"Configuración manual completa.")
     return tablero, filas, columnas
 
 def configuracion_inicial_aleatoria():
@@ -251,13 +251,13 @@ def modificar_tablero(tablero, filas, columnas):
                 tablero[f, c] = CELULA_VIVA_VAL
                 print(Fore.LIGHTGREEN_EX+f"Célula agregada en ({f},{c})")
             else:
-                print(f"La celda ({f},{c}) ya está ocupada")
+                print(Fore.LIGHTRED_EX+f"La celda ({f},{c}) ya está ocupada")
         elif accion == 'e':
             if tablero[f, c] == CELULA_VIVA_VAL:
                 tablero[f, c] = CELULA_VACIA_VAL
-                print(f"Célula eliminada en ({f},{c})")
+                print(Fore.LIGHTRED_EX+f"Célula eliminada en ({f},{c})")
             else:
-                print(f"La celda ({f},{c}) ya está vacía")
+                print(Fore.LIGHTRED_EX+f"La celda ({f},{c}) ya está vacía")
         mostrar_tablero(tablero, "Modificado")
     return tablero
 
@@ -357,11 +357,11 @@ def aplicar_milagro(tablero, filas, columnas):
                     tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
                     print(Fore.LIGHTGREEN_EX+f"¡Milagro 1 ocurrido! Una célula ángel nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
                 else:
-                    print("Milagro 1 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
+                    print(Fore.LIGHTRED_EX+"Milagro 1 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
             else:
-                print("Milagro 1 no ocurrió: No hay celdas vacías en el recorrido relevante")
+                print(Fore.LIGHTRED_EX+"Milagro 1 no ocurrió: No hay celdas vacías en el recorrido relevante")
         else:
-            print("Milagro 1 no ocurrió: No se cumple la condición de celdas vacías requeridas")
+            print(Fore.LIGHTRED_EX+"Milagro 1 no ocurrió: No se cumple la condición de celdas vacías requeridas")
 
     elif eleccion == '2':
         ruta_coordenadas = recorrido_diagonal_secundaria_inferior(filas, columnas)
@@ -388,11 +388,11 @@ def aplicar_milagro(tablero, filas, columnas):
                     tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
                     print(Fore.LIGHTGREEN_EX+f"¡Milagro 2 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
                 else:
-                    print("Milagro 2 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
+                    print(Fore.LIGHTRED_EX+"Milagro 2 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
             else:
-                print("Milagro 2 no ocurrió: No hay celdas vacías en el recorrido relevante")
+                print(Fore.LIGHTRED_EX+"Milagro 2 no ocurrió: No hay celdas vacías en el recorrido relevante")
         else:
-            print("Milagro 2 no ocurrió: No se cumple la condición de celdas vacías requeridas")
+            print(Fore.LIGHTRED_EX+"Milagro 2 no ocurrió: No se cumple la condición de celdas vacías requeridas")
 
     elif eleccion == '3':
         ruta_coordenadas = recorrido_zigzag_vertical(filas, columnas)
@@ -423,11 +423,11 @@ def aplicar_milagro(tablero, filas, columnas):
                     tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
                     print(Fore.LIGHTGREEN_EX+f"¡Milagro 3 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
                 else:
-                    print("Milagro 3 no ocurrió: No se encontró una posición vacía elegible en la segunda mitad del recorrido")
+                    print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió: No se encontró una posición vacía elegible en la segunda mitad del recorrido")
             else:
-                print("Milagro 3 no ocurrió: No hay celdas vacías en el recorrido relevante")
+                print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió: No hay celdas vacías en el recorrido relevante")
         else:
-            print("Milagro 3 no ocurrió: No se cumple la condición de celdas vacías requeridas")
+            print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió: No se cumple la condición de celdas vacías requeridas")
 
     elif eleccion == '4':
         print("Volviendo al menú principal")
@@ -476,7 +476,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
         celulas_vivas_en_siguiente_gen = np.sum(siguiente_tablero == CELULA_VIVA_VAL)
 
         if celulas_vivas_en_siguiente_gen == 0:
-            print(f"\n¡Todas las células murieron en la generación {gen}!")
+            print(Fore.LIGHTRED_EX+f"\n¡Todas las células murieron en la generación {gen}!")
             mostrar_tablero(siguiente_tablero, gen)
             input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
             return siguiente_tablero
