@@ -104,14 +104,14 @@ def configuracion_inicial_manual():
     print("\n--- Configuración Manual del Caldo de Cultivo ---")
     filas, columnas = None, None
     while filas is None:
-        dim_input = input(f"Ingrese las dimensiones del tablero (n,m, máx {MAX_DIMENSION}x{MAX_DIMENSION}): ")
+        dim_input = input(Fore.LIGHTBLUE_EX+f"Ingrese las dimensiones del tablero (n,m, máx {MAX_DIMENSION}x{MAX_DIMENSION}): ")
         filas, columnas = validar_dimensiones(dim_input)
 
     tablero = inicializar_tablero_vacio_np(filas, columnas)
 
     print("Ingrese las coordenadas de las células vivas (i,j). Deje en blanco para terminar")
     while True:
-        coord_input = input(f"Célula viva (i,j) para un tablero de {filas}x{columnas}: ")
+        coord_input = input(Fore.LIGHTBLUE_EX+f"Célula viva (i,j) para un tablero de {filas}x{columnas}: ")
         if not coord_input:
             break
         i, j = validar_coordenadas(coord_input, filas, columnas)
@@ -130,7 +130,7 @@ def configuracion_inicial_aleatoria():
     print("\n--- Configuración Aleatoria del Caldo de Cultivo ---")
     filas, columnas = None, None
     while filas is None:
-        dim_input = input(f"Ingrese las dimensiones del tablero (n,m, máx {MAX_DIMENSION}x{MAX_DIMENSION}): ")
+        dim_input = input(Fore.LIGHTBLUE_EX+f"Ingrese las dimensiones del tablero (n,m, máx {MAX_DIMENSION}x{MAX_DIMENSION}): ")
         filas, columnas = validar_dimensiones(dim_input)
 
     tablero = inicializar_tablero_vacio_np(filas, columnas)
@@ -138,7 +138,7 @@ def configuracion_inicial_aleatoria():
 
     num_celulas_vivas = -1
     while True:
-        num_input = input(f"Ingrese el número de células vivas (mínimo {filas}, máximo {total_celdas}) o 'r' para aleatorio: ").lower()
+        num_input = input(Fore.LIGHTBLUE_EX+f"Ingrese el número de células vivas (mínimo {filas}, máximo {total_celdas}) o 'r' para aleatorio: ").lower()
         if num_input == 'r':
             num_celulas_vivas = random.randint(filas, total_celdas)
             print(f"Se generarán {num_celulas_vivas} células vivas aleatoriamente.")
@@ -233,7 +233,7 @@ def modificar_tablero(tablero, filas, columnas):
     """
     print("\n--- Modificar Caldo de Cultivo ---")
     while True:
-        accion = input("¿Desea (a)gregar, (e)liminar una célula o (t)erminar? ").lower()
+        accion = input(Fore.LIGHTBLUE_EX+"¿Desea (a)gregar, (e)liminar una célula o (t)erminar? ").lower()
         if accion == 't':
             break
 
@@ -241,7 +241,7 @@ def modificar_tablero(tablero, filas, columnas):
             print(Fore.LIGHTRED_EX+"Opción inválida. Por favor, elija 'a', 'e' o 't'")
             continue
 
-        coord_input = input(f"Ingrese las coordenadas (i,j) para la acción (tablero {filas}x{columnas}): ")
+        coord_input = input(Fore.LIGHTBLUE_EX+f"Ingrese las coordenadas (i,j) para la acción (tablero {filas}x{columnas}): ")
         f, c = validar_coordenadas(coord_input, filas, columnas)
         if f is None or c is None:
             continue
@@ -325,7 +325,7 @@ def aplicar_milagro(tablero, filas, columnas):
     print("3. Milagro 3 (Zigzag vertical, celdas con coordenada fila impar)")
     print("4. Volver al menú principal")
 
-    eleccion = input("Seleccione una opción de milagro: ")
+    eleccion = input(Fore.LIGHTBLUE_EX+"Seleccione una opción de milagro: ")
 
     ruta_coordenadas = []
     celdas_relevantes_conteo = 0
@@ -434,7 +434,7 @@ def aplicar_milagro(tablero, filas, columnas):
     else:
         print(Fore.LIGHTRED_EX+"Opción inválida de milagro")
 
-    input("\nPresione Enter para continuar...")
+    input(Fore.LIGHTBLUE_EX+"\nPresione Enter para continuar...")
     return tablero
 
 def ejecutar_simulacion(tablero, filas, columnas):
@@ -444,12 +444,12 @@ def ejecutar_simulacion(tablero, filas, columnas):
     """
     if tablero is None:
         print(Fore.LIGHTRED_EX+"No hay un tablero inicial configurado para la simulación")
-        input("Presione Enter para continuar...")
+        input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
         return None
 
     while True:
         try:
-            generaciones_str = input("Ingrese el número de generaciones a simular (0 para solo una generación): ")
+            generaciones_str = input(Fore.LIGHTBLUE_EX+"Ingrese el número de generaciones a simular (0 para solo una generación): ")
             generaciones = int(generaciones_str)
             if generaciones < 0:
                 print(Fore.LIGHTRED_EX+"El número de generaciones no puede ser negativo")
@@ -464,7 +464,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
     if celulas_vivas_iniciales == 0:
         print(Fore.LIGHTRED_EX+"\nEl tablero inicial no tiene células vivas. No hay evolución posible")
         mostrar_tablero(tablero_actual, 0)
-        input("Presione Enter para continuar...")
+        input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
         return tablero_actual
 
     for gen in range(1, generaciones + 1):
@@ -478,7 +478,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
         if celulas_vivas_en_siguiente_gen == 0:
             print(f"\n¡Todas las células murieron en la generación {gen}!")
             mostrar_tablero(siguiente_tablero, gen)
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
             return siguiente_tablero
         
         tablero_actual = siguiente_tablero
@@ -486,7 +486,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
     limpiar_pantalla()
     mostrar_tablero(tablero_actual, generaciones)
     print(f"\nSimulación completada después de {generaciones} generaciones")
-    input("Presione Enter para continuar...")
+    input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
     return tablero_actual
 
 def guardar_configuracion_final(tablero, nombre_archivo):
@@ -504,7 +504,7 @@ def guardar_configuracion_final(tablero, nombre_archivo):
             filas_vivas, cols_vivas = np.where(tablero == CELULA_VIVA_VAL)
             
             if len(filas_vivas) == 0:
-                print(f"No hay células vivas en el tablero final. El archivo '{nombre_archivo}' estará vacío")
+                print(Fore.LIGHTRED_EX+f"No hay células vivas en el tablero final. El archivo '{nombre_archivo}' estará vacío")
             else:
                 for r, c in zip(filas_vivas, cols_vivas):
                     f.write(f"{r},{c}\n")
@@ -512,7 +512,7 @@ def guardar_configuracion_final(tablero, nombre_archivo):
                 print(Fore.LIGHTGREEN_EX+f"Configuración final guardada exitosamente en '{nombre_archivo}'")
     except Exception as e:
         print(Fore.LIGHTRED_EX+f"Error al guardar la configuración final en '{nombre_archivo}': {e}")
-    input("Presione Enter para continuar...")
+    input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
 # Flujo Principal del Programa
 
@@ -537,7 +537,7 @@ def menu_principal():
         print("9. Guardar configuración final (ACASALI.TXT)")
         print("0. Salir de ACA")
 
-        eleccion = input("Ingrese su opción: ")
+        eleccion = input(Fore.LIGHTBLUE_EX+"Ingrese su opción: ")
 
         if eleccion == '1':
             tablero_actual, filas, columnas = leer_configuracion_inicial(ARCHIVO_ENTRADA_ACA)
@@ -545,46 +545,46 @@ def menu_principal():
                 mostrar_tablero(tablero_actual, "Inicial")
             else:
                 print(Fore.LIGHTRED_EX+"No se pudo cargar la configuración")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
         elif eleccion == '2':
             tablero_actual, filas, columnas = configuracion_inicial_manual()
             if tablero_actual is not None:
                 mostrar_tablero(tablero_actual, "Inicial")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
         elif eleccion == '3':
             tablero_actual, filas, columnas = configuracion_inicial_aleatoria()
             if tablero_actual is not None:
                 mostrar_tablero(tablero_actual, "Inicial")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
         elif eleccion == '4':
             if tablero_actual is not None:
                 mostrar_tablero(tablero_actual, "Actual")
             else:
                 print(Fore.LIGHTRED_EX+"No hay un tablero configurado. Por favor, cargue o genere uno primero")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
         
         elif eleccion == '5':
             if tablero_actual is not None and filas is not None and columnas is not None:
                 tablero_actual = modificar_tablero(tablero_actual, filas, columnas)
             else:
                 print(Fore.LIGHTRED_EX+"No hay un tablero configurado para modificar")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
         elif eleccion == '6':
             if tablero_actual is not None and filas is not None and columnas is not None:
                 celulas_vivas_conteo = np.sum(tablero_actual == CELULA_VIVA_VAL)
                 if celulas_vivas_conteo == 0:
-                    print("No hay células vivas en el tablero para evolucionar")
+                    print(Fore.LIGHTRED_EX+"No hay células vivas en el tablero para evolucionar")
                     mostrar_tablero(tablero_actual, "Actual")
                 else:
                     tablero_actual = aplicar_reglas(tablero_actual, filas, columnas)
                     mostrar_tablero(tablero_actual, "Siguiente")
             else:
                 print(Fore.LIGHTRED_EX+"No hay un tablero configurado para calcular la siguiente generación")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
         elif eleccion == '7':
             if tablero_actual is not None and filas is not None and columnas is not None:
@@ -592,7 +592,7 @@ def menu_principal():
                 mostrar_tablero(tablero_actual, "Después del Milagro")
             else:
                 print(Fore.LIGHTRED_EX+"No hay un tablero configurado para aplicar milagros")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
         elif eleccion == '8':
             if tablero_actual is not None and filas is not None and columnas is not None:
@@ -609,7 +609,7 @@ def menu_principal():
 
         else:
             print(Fore.LIGHTRED_EX+"Opción inválida. Por favor, intente de nuevo")
-            input("Presione Enter para continuar...")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
 
 if __name__ == "__main__":
     menu_principal()
