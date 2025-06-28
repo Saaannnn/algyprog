@@ -7,8 +7,8 @@ init(autoreset=True)
 # Constantes Globales
 CELULA_VIVA_VAL = 1 # Representación numérica para numpy
 CELULA_VACIA_VAL = 0 # Representación numérica para numpy
-CELULA_VIVA_CHAR = 'X' # Carácter para mostrar
-CELULA_VACIA_CHAR = '.' # Carácter para mostrar
+CELULA_VIVA_CHAR = Fore.LIGHTGREEN_EX+'X' # Carácter para mostrar
+CELULA_VACIA_CHAR = Fore.LIGHTRED_EX+'.' # Carácter para mostrar
 
 ARCHIVO_ENTRADA_ACA = 'ACAENTRA'
 ARCHIVO_SALIDA_ACA = 'ACASALI.TXT'
@@ -407,7 +407,7 @@ def aplicar_milagro(tablero, filas, columnas):
             if tablero[f, c] == CELULA_VACIA_VAL:
                 celdas_vacias_en_ruta.append((f, c))
         
-        print(Fore.LIGHTYELLOW_EXf+"Milagro 3: Celdas relevantes con coordenada fila impar: {celdas_relevantes_conteo}")
+        print(Fore.LIGHTYELLOW_EX+f"Milagro 3: Celdas relevantes con coordenada fila impar: {celdas_relevantes_conteo}")
         print(Fore.LIGHTYELLOW_EX+f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
         print(Fore.LIGHTYELLOW_EX+f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
 
