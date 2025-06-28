@@ -1,7 +1,9 @@
 import numpy as np
 import random
 import os
+from colorama import *
 
+init(autoreset=True)
 # Constantes Globales
 CELULA_VIVA_VAL = 1 # Representación numérica para numpy
 CELULA_VACIA_VAL = 0 # Representación numérica para numpy
@@ -231,7 +233,7 @@ def modificar_tablero(tablero, filas, columnas):
     """
     Permite al usuario modificar el tablero actual agregando o eliminando celdas.
     """
-    print("\n--- Modificar Caldo de Cultivo ---")
+    print(Fore.LIGHTWHITE_EX+"\n--- Modificar Caldo de Cultivo ---")
     while True:
         accion = input(Fore.LIGHTBLUE_EX+"¿Desea (a)gregar, (e)liminar una célula o (t)erminar? ").lower()
         if accion == 't':
@@ -320,10 +322,10 @@ def aplicar_milagro(tablero, filas, columnas):
     Permite al usuario aplicar uno de los tres eventos de "milagro".
     """
     print(Fore.LIGHTWHITE_EX+"\n--- Aplicar Milagro ---")
-    print(Fore.LIGHTCYAN_EX++"1. Milagro 1 (Recorrido en espiral, celdas coordenadas impares (fila,columna))")
-    print(Fore.LIGHTCYAN_EX++"2. Milagro 2 (Diagonal secundaria inferior, celdas con coordenada columna par)")
-    print(Fore.LIGHTCYAN_EX++"3. Milagro 3 (Zigzag vertical, celdas con coordenada fila impar)")
-    print(Fore.LIGHTCYAN_EX++"4. Volver al menú principal")
+    print(Fore.LIGHTBLACK_EX+"1. Milagro 1 (Recorrido en espiral, celdas coordenadas impares (fila,columna))")
+    print(Fore.LIGHTBLACK_EX+"2. Milagro 2 (Diagonal secundaria inferior, celdas con coordenada columna par)")
+    print(Fore.LIGHTBLACK_EX+"3. Milagro 3 (Zigzag vertical, celdas con coordenada fila impar)")
+    print(Fore.LIGHTBLACK_EX+"4. Volver al menú principal")
 
     eleccion = input(Fore.LIGHTBLUE_EX+"Seleccione una opción de milagro: ")
 
@@ -526,16 +528,16 @@ def menu_principal():
     while True:
         limpiar_pantalla()
         print(Fore.LIGHTWHITE_EX+"\n--- AUTÓMATA CELULAR ACA ---")
-        print(Fore.LIGHTCYAN_EX+"1. Cargar configuración inicial desde archivo (ACAENTRA.TXT)")
-        print(Fore.LIGHTCYAN_EX+"2. Configurar tablero manualmente")
-        print(Fore.LIGHTCYAN_EX+"3. Generar configuración aleatoria")
-        print(Fore.LIGHTCYAN_EX+"4. Mostrar tablero actual")
-        print(Fore.LIGHTCYAN_EX+"5. Modificar tablero (agregar/eliminar células)")
-        print(Fore.LIGHTCYAN_EX+"6. Calcular y mostrar siguiente generación (Puntual)")
-        print(Fore.LIGHTCYAN_EX+"7. Permitir 'Milagros'")
-        print(Fore.LIGHTCYAN_EX+"8. Calcular y mostrar tras X generaciones")
-        print(Fore.LIGHTCYAN_EX+"9. Guardar configuración final (ACASALI.TXT)")
-        print(Fore.LIGHTCYAN_EX+"0. Salir de ACA")
+        print(Fore.LIGHTBLACK_EX+"1. Cargar configuración inicial desde archivo (ACAENTRA.TXT)")
+        print(Fore.LIGHTBLACK_EX+"2. Configurar tablero manualmente")
+        print(Fore.LIGHTBLACK_EX+"3. Generar configuración aleatoria")
+        print(Fore.LIGHTBLACK_EX+"4. Mostrar tablero actual")
+        print(Fore.LIGHTBLACK_EX+"5. Modificar tablero (agregar/eliminar células)")
+        print(Fore.LIGHTBLACK_EX+"6. Calcular y mostrar siguiente generación (Puntual)")
+        print(Fore.LIGHTBLACK_EX+"7. Permitir 'Milagros'")
+        print(Fore.LIGHTBLACK_EX+"8. Calcular y mostrar tras X generaciones")
+        print(Fore.LIGHTBLACK_EX+"9. Guardar configuración final (ACASALI.TXT)")
+        print(Fore.LIGHTBLACK_EX+"0. Salir de ACA")
 
         eleccion = input(Fore.LIGHTBLUE_EX+"Ingrese su opción: ")
 
@@ -604,7 +606,7 @@ def menu_principal():
             guardar_configuracion_final(tablero_actual, ARCHIVO_SALIDA_ACA)
 
         elif eleccion == '0':
-            print("Saliendo de AUTÓMATA CELULAR ACA. ¡Hasta luego!")
+            print(Fore.LIGHTBLACK_EX+"Saliendo de AUTÓMATA CELULAR ACA. ¡Hasta luego!")
             break
 
         else:
