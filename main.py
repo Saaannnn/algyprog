@@ -63,7 +63,7 @@ def leer_configuracion_inicial(nombre_archivo):
     Líneas subsiguientes: i,j (fila, columna de una celda viva)
     """
     nombre_archivo="ACAENTRA.txt"
-    print(f"\nIntentando leer la configuración inicial desde '{nombre_archivo}'...")
+    print(Fore.LIGHTYELLOW_EX+f"\nIntentando leer la configuración inicial desde '{nombre_archivo}'...")
     try:
         with open(nombre_archivo, 'r') as f:
             lineas = f.readlines()
@@ -141,7 +141,7 @@ def configuracion_inicial_aleatoria():
         num_input = input(Fore.LIGHTBLUE_EX+f"Ingrese el número de células vivas (mínimo {filas}, máximo {total_celdas}) o 'r' para aleatorio: ").lower()
         if num_input == 'r':
             num_celulas_vivas = random.randint(filas, total_celdas)
-            print(f"Se generarán {num_celulas_vivas} células vivas aleatoriamente.")
+            print(Fore.LIGHTGREEN_EX+f"Se generarán {num_celulas_vivas} células vivas aleatoriamente.")
             break
         try:
             num_celulas_vivas = int(num_input)
@@ -162,7 +162,7 @@ def configuracion_inicial_aleatoria():
         c = idx % columnas  # Convertir índice plano a columna
         tablero[f, c] = CELULA_VIVA_VAL # Asignar célula viva
 
-    print(f"Configuración aleatoria completa. {num_celulas_vivas} células vivas en un tablero {filas}x{columnas}")
+    print(Fore.LIGHTGREEN_EX+f"Configuración aleatoria completa. {num_celulas_vivas} células vivas en un tablero {filas}x{columnas}")
     return tablero, filas, columnas
 
 def mostrar_tablero(tablero, generacion="Actual"):
