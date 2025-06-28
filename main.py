@@ -508,9 +508,9 @@ def guardar_configuracion_final(tablero, nombre_archivo):
             if len(filas_vivas) == 0:
                 print(Fore.LIGHTRED_EX+f"No hay células vivas en el tablero final. El archivo '{nombre_archivo}' estará vacío")
             else:
+                f.write(f"{tablero.shape[0]},{tablero.shape[1]}\n")
                 for r, c in zip(filas_vivas, cols_vivas):
                     f.write(f"{r},{c}\n")
-                celulas_vivas_encontradas = True
                 print(Fore.LIGHTGREEN_EX+f"Configuración final guardada exitosamente en '{nombre_archivo}'")
     except Exception as e:
         print(Fore.LIGHTRED_EX+f"Error al guardar la configuración final en '{nombre_archivo}': {e}")
