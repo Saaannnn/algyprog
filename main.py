@@ -101,7 +101,7 @@ def configuracion_inicial_manual():
     """
     Permite al usuario introducir manualmente las dimensiones iniciales del tablero y las coordenadas de las celdas vivas.
     """
-    print("\n--- Configuración Manual del Caldo de Cultivo ---")
+    print(Fore.LIGHTWHITE_EX+"\n--- Configuración Manual del Caldo de Cultivo ---")
     filas, columnas = None, None
     while filas is None:
         dim_input = input(Fore.LIGHTBLUE_EX+f"Ingrese las dimensiones del tablero (n,m, máx {MAX_DIMENSION}x{MAX_DIMENSION}): ")
@@ -127,7 +127,7 @@ def configuracion_inicial_aleatoria():
     Genera una configuración inicial aleatoria de celdas vivas en el tablero.
     El usuario introduce las dimensiones y el número de celdas vivas (o una cantidad aleatoria).
     """
-    print("\n--- Configuración Aleatoria del Caldo de Cultivo ---")
+    print(Fore.LIGHTWHITE_EX+"\n--- Configuración Aleatoria del Caldo de Cultivo ---")
     filas, columnas = None, None
     while filas is None:
         dim_input = input(Fore.LIGHTBLUE_EX+f"Ingrese las dimensiones del tablero (n,m, máx {MAX_DIMENSION}x{MAX_DIMENSION}): ")
@@ -319,11 +319,11 @@ def aplicar_milagro(tablero, filas, columnas):
     """
     Permite al usuario aplicar uno de los tres eventos de "milagro".
     """
-    print("\n--- Aplicar Milagro ---")
-    print("1. Milagro 1 (Recorrido en espiral, celdas coordenadas impares (fila,columna))")
-    print("2. Milagro 2 (Diagonal secundaria inferior, celdas con coordenada columna par)")
-    print("3. Milagro 3 (Zigzag vertical, celdas con coordenada fila impar)")
-    print("4. Volver al menú principal")
+    print(Fore.LIGHTWHITE_EX+"\n--- Aplicar Milagro ---")
+    print(Fore.LIGHTCYAN_EX++"1. Milagro 1 (Recorrido en espiral, celdas coordenadas impares (fila,columna))")
+    print(Fore.LIGHTCYAN_EX++"2. Milagro 2 (Diagonal secundaria inferior, celdas con coordenada columna par)")
+    print(Fore.LIGHTCYAN_EX++"3. Milagro 3 (Zigzag vertical, celdas con coordenada fila impar)")
+    print(Fore.LIGHTCYAN_EX++"4. Volver al menú principal")
 
     eleccion = input(Fore.LIGHTBLUE_EX+"Seleccione una opción de milagro: ")
 
@@ -485,7 +485,7 @@ def ejecutar_simulacion(tablero, filas, columnas):
 
     limpiar_pantalla()
     mostrar_tablero(tablero_actual, generaciones)
-    print(f"\nSimulación completada después de {generaciones} generaciones")
+    print(Fore.LIGHTGREEN_EX+f"\nSimulación completada después de {generaciones} generaciones")
     input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
     return tablero_actual
 
@@ -525,17 +525,17 @@ def menu_principal():
     
     while True:
         limpiar_pantalla()
-        print("\n--- AUTÓMATA CELULAR ACA ---")
-        print("1. Cargar configuración inicial desde archivo (ACAENTRA.TXT)")
-        print("2. Configurar tablero manualmente")
-        print("3. Generar configuración aleatoria")
-        print("4. Mostrar tablero actual")
-        print("5. Modificar tablero (agregar/eliminar células)")
-        print("6. Calcular y mostrar siguiente generación (Puntual)")
-        print("7. Permitir 'Milagros'")
-        print("8. Calcular y mostrar tras X generaciones")
-        print("9. Guardar configuración final (ACASALI.TXT)")
-        print("0. Salir de ACA")
+        print(Fore.LIGHTWHITE_EX+"\n--- AUTÓMATA CELULAR ACA ---")
+        print(Fore.LIGHTCYAN_EX+"1. Cargar configuración inicial desde archivo (ACAENTRA.TXT)")
+        print(Fore.LIGHTCYAN_EX+"2. Configurar tablero manualmente")
+        print(Fore.LIGHTCYAN_EX+"3. Generar configuración aleatoria")
+        print(Fore.LIGHTCYAN_EX+"4. Mostrar tablero actual")
+        print(Fore.LIGHTCYAN_EX+"5. Modificar tablero (agregar/eliminar células)")
+        print(Fore.LIGHTCYAN_EX+"6. Calcular y mostrar siguiente generación (Puntual)")
+        print(Fore.LIGHTCYAN_EX+"7. Permitir 'Milagros'")
+        print(Fore.LIGHTCYAN_EX+"8. Calcular y mostrar tras X generaciones")
+        print(Fore.LIGHTCYAN_EX+"9. Guardar configuración final (ACASALI.TXT)")
+        print(Fore.LIGHTCYAN_EX+"0. Salir de ACA")
 
         eleccion = input(Fore.LIGHTBLUE_EX+"Ingrese su opción: ")
 
