@@ -9,6 +9,7 @@ CELULA_VIVA_VAL = 1 # Representación numérica para numpy
 CELULA_VACIA_VAL = 0 # Representación numérica para numpy
 CELULA_VIVA_CHAR = Fore.LIGHTGREEN_EX+'X' # Carácter para mostrar
 CELULA_VACIA_CHAR = Fore.LIGHTRED_EX+'.' # Carácter para mostrar
+celula_angel_pos = None
 
 ARCHIVO_ENTRADA_ACA = 'ACAENTRA'
 ARCHIVO_SALIDA_ACA = 'ACASALI.TXT'
@@ -168,30 +169,41 @@ def configuracion_inicial_aleatoria():
     return tablero, filas, columnas
 
 def mostrar_tablero(tablero, generacion="Actual"):
-    """
-    Muestra el estado actual del tablero (numpy array) y las coordenadas vivas. Junto a la cadena de caracteres con la lista de posiciones
-    """
+    """ Muestra el estado actual del tablero (numpy array) y las coordenadas vivas. """
     if tablero is None:
-        print(Fore.LIGHTRED_EX+"No hay tablero para mostrar")
+        print(Fore.LIGHTRED_EX + "No hay tablero para mostrar")
         return
 
     print(f"\n--- Generación {generacion} ---")
     posiciones_vivas = []
+
     for f in range(tablero.shape[0]):
         for c in range(tablero.shape[1]):
             if tablero[f, c] == CELULA_VIVA_VAL:
+                if celula_angel_pos == (f, c):
+                    char_to_print = Fore.LIGHTYELLOW_EX + 'A'
+                else:
+                    char_to_print = CELULA_VIVA_CHAR
                 posiciones_vivas.append((f, c))
-                char_to_print = CELULA_VIVA_CHAR
             else:
                 char_to_print = CELULA_VACIA_CHAR
             print(char_to_print, end=' ')
         print()
+
     print("-" * (tablero.shape[1] * 2 + 5))
     if posiciones_vivas:
-        cadena_posiciones = " ".join([f"({f},{c})" for f, c in posiciones_vivas])
-        print(Fore.LIGHTGREEN_EX + "Células vivas en: " + cadena_posiciones)
+        cadena_posiciones = ""
+        for f, c in posiciones_vivas:
+            if celula_angel_pos == (f, c):
+                cadena_posiciones += Fore.LIGHTYELLOW_EX + f"({f},{c}) "  # Ángel
+            else:
+                cadena_posiciones += Fore.LIGHTGREEN_EX + f"({f},{c}) "
+        print("Células vivas en: " + cadena_posiciones.strip())
     else:
         print(Fore.LIGHTRED_EX + "No hay células vivas en esta generación.")
+
+    celula_angel_pos.clear()
+
     return posiciones_vivas
 
 def contar_vecinos(tablero, f, c, filas, columnas):
@@ -329,125 +341,109 @@ def recorrido_zigzag_vertical(filas, columnas):
     return ruta
 
 def aplicar_milagro(tablero, filas, columnas):
-    """
-    Permite al usuario aplicar uno de los tres eventos de "milagro".
-    """
-    print(Fore.LIGHTWHITE_EX+"\n--- Aplicar Milagro ---")
-    print(Fore.LIGHTBLACK_EX+"1. Milagro 1 (Recorrido en espiral, celdas coordenadas impares (fila,columna))")
-    print(Fore.LIGHTBLACK_EX+"2. Milagro 2 (Diagonal secundaria inferior, celdas con coordenada columna par)")
-    print(Fore.LIGHTBLACK_EX+"3. Milagro 3 (Zigzag vertical, celdas con coordenada fila impar)")
-    print(Fore.LIGHTBLACK_EX+"4. Volver al menú principal")
+    """Permite al usuario aplicar uno de los tres eventos de milagro."""
+    global celula_angel_pos
+    celula_angel_pos = None  # Reiniciamos antes de cada milagro
 
-    eleccion = input(Fore.LIGHTBLUE_EX+"Seleccione una opción de milagro: ")
+    print(Fore.LIGHTWHITE_EX + "\n--- Aplicar Milagro ---")
+    print(Fore.LIGHTBLACK_EX + "1. Milagro 1 (Recorrido en espiral, celdas coordenadas impares (fila,columna))")
+    print(Fore.LIGHTBLACK_EX + "2. Milagro 2 (Diagonal secundaria inferior, celdas con coordenada columna par)")
+    print(Fore.LIGHTBLACK_EX + "3. Milagro 3 (Zigzag vertical, celdas con coordenada fila impar)")
+    print(Fore.LIGHTBLACK_EX + "4. Volver al menú principal")
+
+    eleccion = input(Fore.LIGHTBLUE_EX + "Seleccione una opción de milagro: ")
 
     ruta_coordenadas = []
-    celdas_relevantes_conteo = 0
     celdas_vacias_en_ruta = []
     posicion_nacimiento = None
 
     if eleccion == '1':
         ruta_coordenadas = recorrido_espiral(filas, columnas)
-        
         celdas_relevantes = [(f, c) for f, c in ruta_coordenadas if f % 2 != 0 and c % 2 != 0]
-        celdas_relevantes_conteo = len(celdas_relevantes)
-        requeridas_vacias = celdas_relevantes_conteo // 2
+        requeridas_vacias = len(celdas_relevantes) // 2
 
         for f, c in celdas_relevantes:
             if tablero[f, c] == CELULA_VACIA_VAL:
                 celdas_vacias_en_ruta.append((f, c))
-        
-        print(Fore.LIGHTYELLOW_EX+f"Milagro 1: Celdas relevantes con coordenadas (fila,col) impares: {celdas_relevantes_conteo}")
-        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
-        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
+
+        print(Fore.LIGHTYELLOW_EX + f"Milagro 1: {len(celdas_relevantes)} celdas relevantes (ambas coordenadas impares)")
+        print(Fore.LIGHTYELLOW_EX + f"Requiere al menos {requeridas_vacias} vacías — Encontradas: {len(celdas_vacias_en_ruta)}")
 
         if len(celdas_vacias_en_ruta) >= requeridas_vacias:
-            if celdas_vacias_en_ruta:
-                for f, c in ruta_coordenadas:
-                    if f % 2 != 0 and c % 2 != 0 and tablero[f, c] == CELULA_VACIA_VAL:
-                        posicion_nacimiento = (f, c)
-                        break
-                if posicion_nacimiento:
-                    tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
-                    print(Fore.LIGHTGREEN_EX+f"¡Milagro 1 ocurrido! Una célula ángel nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
-                else:
-                    print(Fore.LIGHTRED_EX+"Milagro 1 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
+            for f, c in ruta_coordenadas:
+                if f % 2 != 0 and c % 2 != 0 and tablero[f, c] == CELULA_VACIA_VAL:
+                    posicion_nacimiento = (f, c)
+                    break
+            if posicion_nacimiento:
+                tablero[posicion_nacimiento] = CELULA_VIVA_VAL
+                celula_angel_pos = posicion_nacimiento
+                print(Fore.LIGHTGREEN_EX + f"¡Milagro 1 ocurrido! Una célula ángel nació en {posicion_nacimiento}")
             else:
-                print(Fore.LIGHTRED_EX+"Milagro 1 no ocurrió: No hay celdas vacías en el recorrido relevante")
+                print(Fore.LIGHTRED_EX + "No se encontró una celda vacía elegible para el nacimiento.")
         else:
-            print(Fore.LIGHTRED_EX+"Milagro 1 no ocurrió: No se cumple la condición de celdas vacías requeridas")
+            print(Fore.LIGHTRED_EX + "No se cumple la condición de celdas vacías requeridas.")
 
     elif eleccion == '2':
         ruta_coordenadas = recorrido_diagonal_secundaria_inferior(filas, columnas)
-        
         celdas_relevantes = [(f, c) for f, c in ruta_coordenadas if c % 2 == 0]
-        celdas_relevantes_conteo = len(celdas_relevantes)
-        requeridas_vacias = celdas_relevantes_conteo * 7 // 10
+        requeridas_vacias = len(celdas_relevantes) * 7 // 10
 
         for f, c in celdas_relevantes:
             if tablero[f, c] == CELULA_VACIA_VAL:
                 celdas_vacias_en_ruta.append((f, c))
-        
-        print(Fore.LIGHTYELLOW_EX+f"Milagro 2: Celdas relevantes con coordenada columna par: {celdas_relevantes_conteo}")
-        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
-        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
+
+        print(Fore.LIGHTYELLOW_EX + f"Milagro 2: {len(celdas_relevantes)} celdas relevantes (columna par)")
+        print(Fore.LIGHTYELLOW_EX + f"Requiere al menos {requeridas_vacias} vacías — Encontradas: {len(celdas_vacias_en_ruta)}")
 
         if len(celdas_vacias_en_ruta) >= requeridas_vacias:
-            if celdas_vacias_en_ruta:
-                for f, c in reversed(ruta_coordenadas):
-                     if c % 2 == 0 and tablero[f, c] == CELULA_VACIA_VAL:
-                        posicion_nacimiento = (f, c)
-                        break
-                if posicion_nacimiento:
-                    tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
-                    print(Fore.LIGHTGREEN_EX+f"¡Milagro 2 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
-                else:
-                    print(Fore.LIGHTRED_EX+"Milagro 2 no ocurrió: No se encontró una posición vacía elegible para el nacimiento")
+            for f, c in reversed(ruta_coordenadas):
+                if c % 2 == 0 and tablero[f, c] == CELULA_VACIA_VAL:
+                    posicion_nacimiento = (f, c)
+                    break
+            if posicion_nacimiento:
+                tablero[posicion_nacimiento] = CELULA_VIVA_VAL
+                celula_angel_pos = posicion_nacimiento
+                print(Fore.LIGHTGREEN_EX + f"¡Milagro 2 ocurrido! Una célula ángel nació en {posicion_nacimiento}")
             else:
-                print(Fore.LIGHTRED_EX+"Milagro 2 no ocurrió: No hay celdas vacías en el recorrido relevante")
+                print(Fore.LIGHTRED_EX + "No se encontró una celda vacía elegible para el nacimiento.")
         else:
-            print(Fore.LIGHTRED_EX+"Milagro 2 no ocurrió: No se cumple la condición de celdas vacías requeridas")
+            print(Fore.LIGHTRED_EX + "No se cumple la condición de celdas vacías requeridas.")
 
     elif eleccion == '3':
         ruta_coordenadas = recorrido_zigzag_vertical(filas, columnas)
-        
         celdas_relevantes = [(f, c) for f, c in ruta_coordenadas if f % 2 != 0]
-        celdas_relevantes_conteo = len(celdas_relevantes)
-        requeridas_vacias = celdas_relevantes_conteo * 6 // 10
+        requeridas_vacias = len(celdas_relevantes) * 6 // 10
 
         for f, c in celdas_relevantes:
             if tablero[f, c] == CELULA_VACIA_VAL:
                 celdas_vacias_en_ruta.append((f, c))
-        
-        print(Fore.LIGHTYELLOW_EX+f"Milagro 3: Celdas relevantes con coordenada fila impar: {celdas_relevantes_conteo}")
-        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías requeridas para el milagro: {requeridas_vacias}")
-        print(Fore.LIGHTYELLOW_EX+f"Celdas vacías encontradas en el recorrido: {len(celdas_vacias_en_ruta)}")
+
+        print(Fore.LIGHTYELLOW_EX + f"Milagro 3: {len(celdas_relevantes)} celdas relevantes (fila impar)")
+        print(Fore.LIGHTYELLOW_EX + f"Requiere al menos {requeridas_vacias} vacías — Encontradas: {len(celdas_vacias_en_ruta)}")
 
         if len(celdas_vacias_en_ruta) >= requeridas_vacias:
-            if celdas_vacias_en_ruta:
-                indice_inicio_segunda_mitad = len(ruta_coordenadas) // 2
-                se_encontro_posicion_nacimiento = False
-                for idx in range(indice_inicio_segunda_mitad, len(ruta_coordenadas)):
-                    f, c = ruta_coordenadas[idx]
-                    if f % 2 != 0 and tablero[f, c] == CELULA_VACIA_VAL:
-                        posicion_nacimiento = (f, c)
-                        se_encontro_posicion_nacimiento = True
-                        break
-                if se_encontro_posicion_nacimiento:
-                    tablero[posicion_nacimiento[0], posicion_nacimiento[1]] = CELULA_VIVA_VAL
-                    print(Fore.LIGHTGREEN_EX+f"¡Milagro 3 ocurrido! Una célula nació en ({posicion_nacimiento[0]},{posicion_nacimiento[1]})")
-                else:
-                    print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió: No se encontró una posición vacía elegible en la segunda mitad del recorrido")
+            mitad = len(ruta_coordenadas) // 2
+            for idx in range(mitad, len(ruta_coordenadas)):
+                f, c = ruta_coordenadas[idx]
+                if f % 2 != 0 and tablero[f, c] == CELULA_VACIA_VAL:
+                    posicion_nacimiento = (f, c)
+                    break
+            if posicion_nacimiento:
+                tablero[posicion_nacimiento] = CELULA_VIVA_VAL
+                celula_angel_pos = posicion_nacimiento
+                print(Fore.LIGHTGREEN_EX + f"¡Milagro 3 ocurrido! Una célula ángel nació en {posicion_nacimiento}")
             else:
-                print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió: No hay celdas vacías en el recorrido relevante")
+                print(Fore.LIGHTRED_EX + "No se encontró una celda vacía elegible en la segunda mitad.")
         else:
-            print(Fore.LIGHTRED_EX+"Milagro 3 no ocurrió: No se cumple la condición de celdas vacías requeridas")
+            print(Fore.LIGHTRED_EX + "No se cumple la condición de celdas vacías requeridas.")
 
     elif eleccion == '4':
-        print(Fore.LIGHTYELLOW_EX+"Volviendo al menú principal")
-    else:
-        print(Fore.LIGHTRED_EX+"Opción inválida de milagro")
+        print(Fore.LIGHTYELLOW_EX + "Volviendo al menú principal")
 
-    input(Fore.LIGHTBLUE_EX+"\nPresione Enter para continuar...")
+    else:
+        print(Fore.LIGHTRED_EX + "Opción inválida de milagro")
+
+    input(Fore.LIGHTBLUE_EX + "\nPresione Enter para continuar...")
     return tablero
 
 def ejecutar_simulacion(tablero, filas, columnas):
@@ -477,152 +473,4 @@ def ejecutar_simulacion(tablero, filas, columnas):
     if celulas_vivas_iniciales == 0:
         print(Fore.LIGHTRED_EX+"\nEl tablero inicial no tiene células vivas. No hay evolución posible")
         mostrar_tablero(tablero_actual, 0)
-        input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-        return tablero_actual
-
-    for gen in range(1, generaciones + 1):
-        limpiar_pantalla()
-        mostrar_tablero(tablero_actual, gen - 1)
-        print(Fore.LIGHTYELLOW_EX+f"Simulando generación {gen} de {generaciones}...")
-
-        siguiente_tablero = aplicar_reglas(tablero_actual, filas, columnas)
-        celulas_vivas_en_siguiente_gen = np.sum(siguiente_tablero == CELULA_VIVA_VAL)
-
-        if celulas_vivas_en_siguiente_gen == 0:
-            print(Fore.LIGHTRED_EX+f"\n¡Todas las células murieron en la generación {gen}!")
-            mostrar_tablero(siguiente_tablero, gen)
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-            return siguiente_tablero
-        
-        tablero_actual = siguiente_tablero
-
-    limpiar_pantalla()
-    mostrar_tablero(tablero_actual, generaciones)
-    print(Fore.LIGHTGREEN_EX+f"\nSimulación completada después de {generaciones} generaciones")
-    input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-    return tablero_actual
-
-def guardar_configuracion_final(tablero, nombre_archivo):
-    """
-    Guarda la configuración final de las celdas vivas en un archivo de texto especificado.
-    """
-    if tablero is None:
-        print(Fore.LIGHTRED_EX+"No hay un tablero para guardar")
-        return
-
-    try:
-        with open(nombre_archivo, 'w') as f:
-            celulas_vivas_encontradas = False
-            # np.where devuelve las coordenadas (filas, columnas) de los elementos que cumplen la condición
-            filas_vivas, cols_vivas = np.where(tablero == CELULA_VIVA_VAL)
-            
-            if len(filas_vivas) == 0:
-                print(Fore.LIGHTRED_EX+f"No hay células vivas en el tablero final. El archivo '{nombre_archivo}' estará vacío")
-            else:
-                f.write(f"{tablero.shape[0]},{tablero.shape[1]}\n")
-                for r, c in zip(filas_vivas, cols_vivas):
-                    f.write(f"{r},{c}\n")
-                print(Fore.LIGHTGREEN_EX+f"Configuración final guardada exitosamente en '{nombre_archivo}'")
-    except Exception as e:
-        print(Fore.LIGHTRED_EX+f"Error al guardar la configuración final en '{nombre_archivo}': {e}")
-    input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-# Flujo Principal del Programa
-
-def menu_principal():
-    """
-    Presenta el menú principal al usuario y maneja el flujo general del programa.
-    """
-    tablero_actual = None
-    filas, columnas = None, None
-    
-    while True:
-        limpiar_pantalla()
-        print(Fore.LIGHTWHITE_EX+"\n--- AUTÓMATA CELULAR ACA ---")
-        print(Fore.LIGHTBLACK_EX+"1. Cargar configuración inicial desde archivo (ACAENTRA.TXT)")
-        print(Fore.LIGHTBLACK_EX+"2. Configurar tablero manualmente")
-        print(Fore.LIGHTBLACK_EX+"3. Generar configuración aleatoria")
-        print(Fore.LIGHTBLACK_EX+"4. Mostrar tablero actual")
-        print(Fore.LIGHTBLACK_EX+"5. Modificar tablero (agregar/eliminar células)")
-        print(Fore.LIGHTBLACK_EX+"6. Calcular y mostrar siguiente generación (Puntual)")
-        print(Fore.LIGHTBLACK_EX+"7. Permitir 'Milagros'")
-        print(Fore.LIGHTBLACK_EX+"8. Calcular y mostrar tras X generaciones")
-        print(Fore.LIGHTBLACK_EX+"9. Guardar configuración final (ACASALI.TXT)")
-        print(Fore.LIGHTBLACK_EX+"0. Salir de ACA")
-
-        eleccion = input(Fore.LIGHTBLUE_EX+"Ingrese su opción: ")
-
-        if eleccion == '1':
-            tablero_actual, filas, columnas = leer_configuracion_inicial(ARCHIVO_ENTRADA_ACA)
-            if tablero_actual is not None:
-                mostrar_tablero(tablero_actual, "Inicial")
-            else:
-                print(Fore.LIGHTRED_EX+"No se pudo cargar la configuración")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-        elif eleccion == '2':
-            tablero_actual, filas, columnas = configuracion_inicial_manual()
-            if tablero_actual is not None:
-                mostrar_tablero(tablero_actual, "Inicial")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-        elif eleccion == '3':
-            tablero_actual, filas, columnas = configuracion_inicial_aleatoria()
-            if tablero_actual is not None:
-                mostrar_tablero(tablero_actual, "Inicial")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-        elif eleccion == '4':
-            if tablero_actual is not None:
-                mostrar_tablero(tablero_actual, "Actual")
-            else:
-                print(Fore.LIGHTRED_EX+"No hay un tablero configurado. Por favor, cargue o genere uno primero")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-        
-        elif eleccion == '5':
-            if tablero_actual is not None and filas is not None and columnas is not None:
-                tablero_actual = modificar_tablero(tablero_actual, filas, columnas)
-            else:
-                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para modificar")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-        elif eleccion == '6':
-            if tablero_actual is not None and filas is not None and columnas is not None:
-                celulas_vivas_conteo = np.sum(tablero_actual == CELULA_VIVA_VAL)
-                if celulas_vivas_conteo == 0:
-                    print(Fore.LIGHTRED_EX+"No hay células vivas en el tablero para evolucionar")
-                    mostrar_tablero(tablero_actual, "Actual")
-                else:
-                    tablero_actual = aplicar_reglas(tablero_actual, filas, columnas)
-                    mostrar_tablero(tablero_actual, "Siguiente")
-            else:
-                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para calcular la siguiente generación")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-        elif eleccion == '7':
-            if tablero_actual is not None and filas is not None and columnas is not None:
-                tablero_actual = aplicar_milagro(tablero_actual, filas, columnas)
-                mostrar_tablero(tablero_actual, "Después del Milagro")
-            else:
-                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para aplicar milagros")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-        elif eleccion == '8':
-            if tablero_actual is not None and filas is not None and columnas is not None:
-                tablero_actual = ejecutar_simulacion(tablero_actual, filas, columnas)
-            else:
-                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para simular")
-
-        elif eleccion == '9':
-            guardar_configuracion_final(tablero_actual, ARCHIVO_SALIDA_ACA)
-
-        elif eleccion == '0':
-            print(Fore.LIGHTBLACK_EX+"Saliendo de AUTÓMATA CELULAR ACA. ¡Hasta luego!")
-            break
-
-        else:
-            print(Fore.LIGHTRED_EX+"Opción inválida. Por favor, intente de nuevo")
-            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
-
-if __name__ == "__main__":
-    menu_principal()
+        i
