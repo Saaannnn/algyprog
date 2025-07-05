@@ -169,19 +169,30 @@ def configuracion_inicial_aleatoria():
 
 def mostrar_tablero(tablero, generacion="Actual"):
     """
-    Muestra el estado actual del tablero (numpy array)
+    Muestra el estado actual del tablero (numpy array) y las coordenadas vivas. Junto a la cadena de caracteres con la lista de posiciones
     """
     if tablero is None:
         print(Fore.LIGHTRED_EX+"No hay tablero para mostrar")
         return
 
     print(f"\n--- Generación {generacion} ---")
-    for f in range(tablero.shape[0]): # tablero.shape[0] es el número de filas
-        for c in range(tablero.shape[1]): # tablero.shape[1] es el número de columnas
-            char_to_print = CELULA_VIVA_CHAR if tablero[f, c] == CELULA_VIVA_VAL else CELULA_VACIA_CHAR
+    posiciones_vivas = []
+    for f in range(tablero.shape[0]):
+        for c in range(tablero.shape[1]):
+            if tablero[f, c] == CELULA_VIVA_VAL:
+                posiciones_vivas.append((f, c))
+                char_to_print = CELULA_VIVA_CHAR
+            else:
+                char_to_print = CELULA_VACIA_CHAR
             print(char_to_print, end=' ')
-        print() # Nueva línea después de cada fila
+        print()
     print("-" * (tablero.shape[1] * 2 + 5))
+    if posiciones_vivas:
+        cadena_posiciones = " ".join([f"({f},{c})" for f, c in posiciones_vivas])
+        print(Fore.LIGHTGREEN_EX + "Células vivas en: " + cadena_posiciones)
+    else:
+        print(Fore.LIGHTRED_EX + "No hay células vivas en esta generación.")
+    return posiciones_vivas
 
 def contar_vecinos(tablero, f, c, filas, columnas):
     """
