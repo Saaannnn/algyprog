@@ -473,4 +473,152 @@ def ejecutar_simulacion(tablero, filas, columnas):
     if celulas_vivas_iniciales == 0:
         print(Fore.LIGHTRED_EX+"\nEl tablero inicial no tiene células vivas. No hay evolución posible")
         mostrar_tablero(tablero_actual, 0)
-        i
+        input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+        return tablero_actual
+
+    for gen in range(1, generaciones + 1):
+        limpiar_pantalla()
+        mostrar_tablero(tablero_actual, gen - 1)
+        print(Fore.LIGHTYELLOW_EX+f"Simulando generación {gen} de {generaciones}...")
+
+        siguiente_tablero = aplicar_reglas(tablero_actual, filas, columnas)
+        celulas_vivas_en_siguiente_gen = np.sum(siguiente_tablero == CELULA_VIVA_VAL)
+
+        if celulas_vivas_en_siguiente_gen == 0:
+            print(Fore.LIGHTRED_EX+f"\n¡Todas las células murieron en la generación {gen}!")
+            mostrar_tablero(siguiente_tablero, gen)
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+            return siguiente_tablero
+        
+        tablero_actual = siguiente_tablero
+
+    limpiar_pantalla()
+    mostrar_tablero(tablero_actual, generaciones)
+    print(Fore.LIGHTGREEN_EX+f"\nSimulación completada después de {generaciones} generaciones")
+    input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+    return tablero_actual
+
+def guardar_configuracion_final(tablero, nombre_archivo):
+    """
+    Guarda la configuración final de las celdas vivas en un archivo de texto especificado.
+    """
+    if tablero is None:
+        print(Fore.LIGHTRED_EX+"No hay un tablero para guardar")
+        return
+
+    try:
+        with open(nombre_archivo, 'w') as f:
+            celulas_vivas_encontradas = False
+            # np.where devuelve las coordenadas (filas, columnas) de los elementos que cumplen la condición
+            filas_vivas, cols_vivas = np.where(tablero == CELULA_VIVA_VAL)
+            
+            if len(filas_vivas) == 0:
+                print(Fore.LIGHTRED_EX+f"No hay células vivas en el tablero final. El archivo '{nombre_archivo}' estará vacío")
+            else:
+                f.write(f"{tablero.shape[0]},{tablero.shape[1]}\n")
+                for r, c in zip(filas_vivas, cols_vivas):
+                    f.write(f"{r},{c}\n")
+                print(Fore.LIGHTGREEN_EX+f"Configuración final guardada exitosamente en '{nombre_archivo}'")
+    except Exception as e:
+        print(Fore.LIGHTRED_EX+f"Error al guardar la configuración final en '{nombre_archivo}': {e}")
+    input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+# Flujo Principal del Programa
+
+def menu_principal():
+    """
+    Presenta el menú principal al usuario y maneja el flujo general del programa.
+    """
+    tablero_actual = None
+    filas, columnas = None, None
+    
+    while True:
+        limpiar_pantalla()
+        print(Fore.LIGHTWHITE_EX+"\n--- AUTÓMATA CELULAR ACA ---")
+        print(Fore.LIGHTBLACK_EX+"1. Cargar configuración inicial desde archivo (ACAENTRA.TXT)")
+        print(Fore.LIGHTBLACK_EX+"2. Configurar tablero manualmente")
+        print(Fore.LIGHTBLACK_EX+"3. Generar configuración aleatoria")
+        print(Fore.LIGHTBLACK_EX+"4. Mostrar tablero actual")
+        print(Fore.LIGHTBLACK_EX+"5. Modificar tablero (agregar/eliminar células)")
+        print(Fore.LIGHTBLACK_EX+"6. Calcular y mostrar siguiente generación (Puntual)")
+        print(Fore.LIGHTBLACK_EX+"7. Permitir 'Milagros'")
+        print(Fore.LIGHTBLACK_EX+"8. Calcular y mostrar tras X generaciones")
+        print(Fore.LIGHTBLACK_EX+"9. Guardar configuración final (ACASALI.TXT)")
+        print(Fore.LIGHTBLACK_EX+"0. Salir de ACA")
+
+        eleccion = input(Fore.LIGHTBLUE_EX+"Ingrese su opción: ")
+
+        if eleccion == '1':
+            tablero_actual, filas, columnas = leer_configuracion_inicial(ARCHIVO_ENTRADA_ACA)
+            if tablero_actual is not None:
+                mostrar_tablero(tablero_actual, "Inicial")
+            else:
+                print(Fore.LIGHTRED_EX+"No se pudo cargar la configuración")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+        elif eleccion == '2':
+            tablero_actual, filas, columnas = configuracion_inicial_manual()
+            if tablero_actual is not None:
+                mostrar_tablero(tablero_actual, "Inicial")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+        elif eleccion == '3':
+            tablero_actual, filas, columnas = configuracion_inicial_aleatoria()
+            if tablero_actual is not None:
+                mostrar_tablero(tablero_actual, "Inicial")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+        elif eleccion == '4':
+            if tablero_actual is not None:
+                mostrar_tablero(tablero_actual, "Actual")
+            else:
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado. Por favor, cargue o genere uno primero")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+        
+        elif eleccion == '5':
+            if tablero_actual is not None and filas is not None and columnas is not None:
+                tablero_actual = modificar_tablero(tablero_actual, filas, columnas)
+            else:
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para modificar")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+        elif eleccion == '6':
+            if tablero_actual is not None and filas is not None and columnas is not None:
+                celulas_vivas_conteo = np.sum(tablero_actual == CELULA_VIVA_VAL)
+                if celulas_vivas_conteo == 0:
+                    print(Fore.LIGHTRED_EX+"No hay células vivas en el tablero para evolucionar")
+                    mostrar_tablero(tablero_actual, "Actual")
+                else:
+                    tablero_actual = aplicar_reglas(tablero_actual, filas, columnas)
+                    mostrar_tablero(tablero_actual, "Siguiente")
+            else:
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para calcular la siguiente generación")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+        elif eleccion == '7':
+            if tablero_actual is not None and filas is not None and columnas is not None:
+                tablero_actual = aplicar_milagro(tablero_actual, filas, columnas)
+                mostrar_tablero(tablero_actual, "Después del Milagro")
+            else:
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para aplicar milagros")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+        elif eleccion == '8':
+            if tablero_actual is not None and filas is not None and columnas is not None:
+                tablero_actual = ejecutar_simulacion(tablero_actual, filas, columnas)
+            else:
+                print(Fore.LIGHTRED_EX+"No hay un tablero configurado para simular")
+
+        elif eleccion == '9':
+            guardar_configuracion_final(tablero_actual, ARCHIVO_SALIDA_ACA)
+
+        elif eleccion == '0':
+            print(Fore.LIGHTBLACK_EX+"Saliendo de AUTÓMATA CELULAR ACA. ¡Hasta luego!")
+            break
+
+        else:
+            print(Fore.LIGHTRED_EX+"Opción inválida. Por favor, intente de nuevo")
+            input(Fore.LIGHTBLUE_EX+"Presione Enter para continuar...")
+
+if __name__ == "__main__":
+    menu_principal()
