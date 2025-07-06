@@ -202,8 +202,6 @@ def mostrar_tablero(tablero, generacion="Actual"):
     else:
         print(Fore.LIGHTRED_EX + "No hay células vivas en esta generación.")
 
-    celula_angel_pos.clear()
-
     return posiciones_vivas
 
 def contar_vecinos(tablero, f, c, filas, columnas):
